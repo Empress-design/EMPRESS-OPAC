@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KSTVET Library OPAC</title>
+  <style>
+    :root { --navy:#12304a; --teal:#087f8c; --pale:#eef7f8; --ink:#203040; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial,Helvetica,sans-serif; color:var(--ink); background:#f5f7fa; }
+    header { background:var(--navy); color:white; padding:26px 18px; text-align:center; }
+    header h1 { margin:0 0 8px; font-size:clamp(1.5rem,4vw,2.2rem); }
+    header p { margin:0; line-height:1.5; }
+    main { max-width:900px; margin:24px auto; padding:0 14px; }
+    .panel { background:white; border-radius:14px; padding:20px; box-shadow:0 3px 14px #152c3b12; margin-bottom:18px; }
+    h2 { margin-top:0; color:var(--navy); font-size:1.25rem; }
+    .searchrow { display:flex; gap:8px; }
+    input, select, button { font:inherit; border-radius:8px; padding:12px; }
+    input, select { border:1px solid #bdcbd5; background:white; min-width:0; }
+    input { flex:1; }
+    button { border:0; color:white; background:var(--teal); font-weight:bold; cursor:pointer; }
+    button:hover { filter:brightness(.94); }
+    .filters { display:flex; gap:8px; margin-top:10px; }
+    .filters select { flex:1; }
+    #status { margin:14px 0 0; color:#536675; font-size:.95rem; }
+    .record { border:1px solid #dce6eb; border-left:5px solid var(--teal); border-radius:9px; padding:14px; margin-top:12px; }
+    .record h3 { margin:0 0 7px; font-size:1.08rem; color:var(--navy); }
+    .record p { margin:5px 0; line-height:1.45; }
+    .tag { display:inline-block; background:var(--pale); color:#075e68; border-radius:20px; padding:4px 8px; font-size:.82rem; margin-top:4px; }
+    .note { font-size:.92rem; line-height:1.55; color:#526574; }
+    footer { text-align:center; padding:20px; color:#637381; font-size:.88rem; }
+    @media(max-width:560px) { .searchrow { flex-direction:column; } .filters { flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KSTVET Library OPAC</h1>
+    <p>Online Public Access Catalogue</p>
+    <p>Kenya School of TVET — Find learning resources</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Search the catalogue</h2>
+      <p>Search by title, author, subject, or keyword.</p>
+      <form id="searchForm">
+        <div class="searchrow">
+          <input id="query" type="search" placeholder="e.g. cataloguing, records management" aria-label="Search catalogue">
+          <button type="submit">Search</button>
+          <button type="button" id="resetBtn" style="background:#647786">Reset</button>
+        </div>
+        <div class="filters">
+          <select id="field" aria-label="Search field">
+            <option value="all">All fields</option>
+            <option value="title">Title</option>
+            <option value="author">Author</option>
+            <option value="subject">Subject</option>
+          </select>
+          <select id="type" aria-label="Resource type">
+            <option value="all">All resource types</option>
+            <option value="Book">Books</option>
+            <option value="E-book">E-books</option>
+            <option value="Reference">Reference materials</option>
+          </select>
+        </div>
+      </form>
+      <p id="status" aria-live="polite"></p>
+      <div id="results"></div>
+    </section>
+
+    <section class="panel">
+      <h2>About this catalogue</h2>
+      <p class="note">This is a starter demonstration of a library catalogue search page. The sample records below are examples only, not verified items in the KSTVET collection. Replace them with your library's actual catalogue records before using it as an official catalogue.</p>
+      <p class="note"><strong>Note:</strong> This static website does not connect to Koha or a live library database yet. A real OPAC can be connected to Koha after the catalogue records and hosting are set up.</p>
+    </section>
+  </main>
+
+  <footer> KSTVET Library OPAC · Student demonstration project </footer>
+
+  <script>
+    const records = [
+      { title:"Introduction to Library Cataloguing", author:"A. N. Example", subject:"Cataloguing; Bibliographic description", type:"Book", year:"2022", call:"025.3 EXA", location:"Library shelves — verify availability" },
+      { title:"Classification and Subject Access", author:"B. N. Example", subject:"Library classification; Subject headings", type:"Book", year:"2021", call:"025.4 EXA", location:"Library shelves — verify availability" },
+      { title:"Records Management: Principles and Practice", author:"C. N. Example", subject:"Records management; Archives", type:"Reference", year:"2020", call:"651.5 EXA", location:"Reference section — verify availability" },
+      { title:"Information Literacy in the Digital Age", author:"D. N. Example", subject:"Information literacy; Digital resources", type:"E-book", year:"2023", call:"Online resource — sample record", location:"Demo record; no live link" },
+      { title:"Research Methods for Information Studies", author:"E. N. Example", subject:"Research methods; Information science", type:"Book", year:"2024", call:"001.42 EXA", location:"Library shelves — verify availability" },
+      { title:"Digital Archives and Electronic Records", author:"F. N. Example", subject:"Digital archives; Electronic records", type:"Reference", year:"2022", call:"025.17 EXA", location:"Reference section — verify availability" }
+    ];
+    const query = document.getElementById("query");
+    const field = document.getElementById("field");
+    const type = document.getElementById("type");
+    const results = document.getElementById("results");
+    const status = document.getElementById("status");
+
+    function render() {
+      const q = query.value.trim().toLowerCase();
+      const selectedField = field.value;
+      const selectedType = type.value;
+      const filtered = records.filter(r => {
+        const text = selectedField === "all"
+          ? [r.title, r.author, r.subject, r.call].join(" ")
+          : selectedField === "title" ? r.title
+          : selectedField === "author" ? r.author : r.subject;
+        return text.toLowerCase().includes(q) && (selectedType === "all" || r.type === selectedType);
+      });
+      status.textContent = `${filtered.length} sample record${filtered.length === 1 ? "" : "s"} found`;
+      results.innerHTML = "";
+      if (!filtered.length) {
+        results.innerHTML = '<p>No matching sample records. Try another keyword or reset the search.</p>';
+        return;
+      }
+      filtered.forEach(r => {
+        const article = document.createElement("article");
+        article.className = "record";
+        const title = document.createElement("h3"); title.textContent = r.title;
+        const author = document.createElement("p"); author.textContent = "Author: " + r.author;
+        const subject = document.createElement("p"); subject.textContent = "Subject: " + r.subject;
+        const details = document.createElement("p"); details.textContent = `Year: ${r.year} · Call number: ${r.call}`;
+        const location = document.createElement("p"); location.textContent = "Location/status: " + r.location;
+        const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = r.type;
+        article.append(title, author, subject, details, location, tag);
+        results.appendChild(article);
+      });
+    }
+    document.getElementById("searchForm").addEventListener("submit", e => { e.preventDefault(); render(); });
+    document.getElementById("resetBtn").addEventListener("click", () => { query.value=""; field.value="all"; type.value="all"; render(); });
+    field.addEventListener("change", render);
+    type.addEventListener("change", render);
+    render();
+  </script>
+</body>
+</html>
