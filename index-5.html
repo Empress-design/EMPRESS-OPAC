@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KSTVET Library OPAC</title>
+<style>
+:root{--navy:#12304a;--teal:#087f8c;--pale:#eef7f8;--ink:#243746;--muted:#5d6c75}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f3f6f8;color:var(--ink)}
+header{background:var(--navy);color:#fff;padding:26px 18px}
+header .wrap,main{max-width:1000px;margin:auto}
+header h1{margin:0 0 8px;font-size:clamp(1.5rem,5vw,2.2rem)}
+header p{margin:0;line-height:1.5}
+main{padding:20px 14px 38px}
+.panel{background:#fff;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 5px 20px #16344a0c}
+h2{margin:0 0 14px;color:var(--navy)}
+.search{display:grid;grid-template-columns:1fr;gap:10px}
+input,select,button{font:inherit;padding:13px;border:1px solid #cbd6dc;border-radius:9px;width:100%}
+button{border:0;background:var(--teal);color:#fff;font-weight:bold;cursor:pointer}
+button.secondary{background:#647785}
+.filters{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+#status{color:var(--muted);margin:16px 0 10px}
+.record{border:1px solid #dce6eb;border-left:6px solid var(--teal);border-radius:12px;padding:16px;margin:12px 0}
+.record h3{margin:0 0 8px;color:var(--navy);font-size:1.12rem}
+.record p{margin:6px 0;line-height:1.45}
+.tag{display:inline-block;background:var(--pale);color:#17636b;padding:5px 9px;border-radius:20px;font-size:.86rem;margin:7px 5px 0 0}
+.read{display:inline-block;margin-top:12px;background:var(--teal);color:#fff;text-decoration:none;padding:10px 13px;border-radius:8px;font-weight:bold}
+.small{font-size:.92rem;color:var(--muted);line-height:1.55}
+footer{text-align:center;color:var(--muted);padding:10px 0 28px;font-size:.9rem}
+@media(min-width:650px){.search{grid-template-columns:1fr auto}.search button{width:140px}.filters{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<h1>KSTVET Library OPAC</h1>
+<p>Online Public Access Catalogue · Search books and open authorised digital resources.</p>
+</div></header>
+<main>
+<section class="panel">
+<h2>Search the catalogue</h2>
+<p class="small">Search by title, author, subject, or keyword. These 10 records are demonstration records for public/open educational resources; they are not confirmed holdings of KSTVET Library.</p>
+<div class="search">
+<input id="q" type="search" placeholder="e.g. information literacy, author, computing" aria-label="Search catalogue">
+<button id="searchBtn">Search</button>
+</div>
+<div class="filters">
+<select id="field" aria-label="Search field">
+<option value="all">All fields</option><option value="title">Title</option><option value="author">Author/editor</option><option value="subject">Subject</option>
+</select>
+<select id="kind" aria-label="Resource type">
+<option value="all">All resource types</option><option value="LIS">Library and information science</option><option value="general">General study</option>
+</select>
+</div>
+<button id="resetBtn" class="secondary" style="margin-top:10px">Reset search</button>
+<div id="status" role="status"></div>
+<div id="results"></div>
+</section>
+<section class="panel">
+<h2>About this catalogue</h2>
+<p class="small">This is a demonstration catalogue hosted on GitHub Pages. It does not connect to a live Koha database and cannot confirm whether physical copies are held by KSTVET. Before using it as an official catalogue, replace demonstration holdings and call numbers with records verified from the library's own collection.</p>
+<p class="small">The “Read online / access page” links open publisher or repository pages for books made available online. Access terms belong to each publisher or rights holder. This site links to those resources; it does not host or redistribute their files.</p>
+</section>
+</main>
+<footer>KSTVET OPAC · Demonstration website · Verify bibliographic details and access before official use.</footer>
+<script>
+const books = [
+{title:"Introduction to Library and Information Science",author:"Reed Hepler; David Horalek",year:"2023",publisher:"College of Southern Idaho Pressbooks Network",subject:"Library and information science; librarianship; information services",isbn:"Not listed here",call:"020 HEP (suggested only; verify local classification)",kind:"LIS",url:"https://csi.pressbooks.pub/lis/",availability:"Digital access page available; physical holding not verified",note:"Open textbook. Check the publisher page for reading and download options."},
+{title:"The Information Literacy User’s Guide: An Open, Online Textbook",author:"Deborah Bernnard; Greg Bobish; Jenna Hecker; Irina Holden; Allison Hosier; Trudi Jacobson; Tor Loney; Daryl Bullis",year:"2014",publisher:"Open SUNY / Milne Open Textbooks",subject:"Information literacy; research skills; source evaluation",isbn:"9780989722629",call:"028.7 INF (suggested only; verify local classification)",kind:"LIS",url:"https://milnepublishing.geneseo.edu/the-information-literacy-users-guide-an-open-online-textbook/",availability:"Open online textbook page; physical holding not verified",note:"Creative Commons licence details are listed by the publisher."},
+{title:"Collaboration in Designing a Pedagogical Approach in Information Literacy",author:"Ane Landøy; Daniela Popa; Angela Repanovici",year:"2020",publisher:"Springer",subject:"Information literacy; teaching methods; academic libraries",isbn:"See publisher page",call:"028.7 COL (suggested only; verify local classification)",kind:"LIS",url:"https://link.springer.com/book/10.1007/978-3-030-34258-6",availability:"Open-access book page; physical holding not verified",note:"Publisher page provides the open-access book and download options."},
+{title:"Research as Inquiry: A Discipline Specific Approach to Information Literacy",author:"Laura Clark-Hunt; Andrew McIntosh; Kennon Deal; Janet Koposko; Vanessa Lane",year:"2021–2022",publisher:"University System of Georgia / Affordable Learning Georgia",subject:"Information literacy; research; information evaluation",isbn:"See repository page",call:"028.7 RES (suggested only; verify local classification)",kind:"LIS",url:"https://oer.galileo.usg.edu/infolit-textbooks/2/",availability:"Open textbook repository page; physical holding not verified",note:"Repository lists the open textbook and its Creative Commons licence."},
+{title:"Information Literacy: Research and Collaboration across Disciplines",author:"Barbara J. D’Angelo; Sandra Jamieson; Barry Maid (editors)",year:"2016",publisher:"WAC Clearinghouse",subject:"Information literacy; research; academic writing",isbn:"See publisher page",call:"028.7 INF (suggested only; verify local classification)",kind:"LIS",url:"https://wac.colostate.edu/books/perspectives/literacy/",availability:"Publisher access page; check available formats",note:"Use the publisher's page to confirm the correct book and access options."},
+{title:"OpenStax Psychology 2e",author:"Rose M. Spielman; William J. Jenkins; Marilyn D. Lovett",year:"2020",publisher:"OpenStax, Rice University",subject:"Psychology; human behaviour; learning",isbn:"978-1-975076-45-0",call:"150 SPI (suggested only; verify local classification)",kind:"general",url:"https://openstax.org/details/books/psychology-2e",availability:"Free online textbook page; physical holding not verified",note:"OpenStax provides free online reading and PDF access."},
+{title:"Introduction to Sociology 3e",author:"OpenStax",year:"2021",publisher:"OpenStax, Rice University",subject:"Sociology; society; culture; social institutions",isbn:"978-1-951693-33-9",call:"301 OPE (suggested only; verify local classification)",kind:"general",url:"https://openstax.org/details/books/introduction-sociology-3e",availability:"Free online textbook page; physical holding not verified",note:"OpenStax provides free online reading and PDF access."},
+{title:"Principles of Management",author:"David S. Bright; Anastasia H. Cortes; et al.",year:"2019",publisher:"OpenStax, Rice University",subject:"Management; organisations; leadership",isbn:"978-1-947172-54-8",call:"658 BRI (suggested only; verify local classification)",kind:"general",url:"https://openstax.org/details/books/principles-management",availability:"Free online textbook page; physical holding not verified",note:"OpenStax provides free online reading and PDF access."},
+{title:"Business Ethics",author:"OpenStax contributors",year:"2022",publisher:"OpenStax, Rice University",subject:"Business ethics; responsibility; decision-making",isbn:"See publisher page",call:"174.4 BUS (suggested only; verify local classification)",kind:"general",url:"https://openstax.org/details/books/business-ethics",availability:"Free online textbook page; physical holding not verified",note:"Check the publisher page for current formats and attribution information."},
+{title:"College Success",author:"Amy Baldwin",year:"2020",publisher:"OpenStax, Rice University",subject:"Study skills; student success; learning strategies",isbn:"978-1-951693-23-0",call:"378.1 BAL (suggested only; verify local classification)",kind:"general",url:"https://openstax.org/details/books/college-success",availability:"Free online textbook page; physical holding not verified",note:"OpenStax provides a free online textbook page."}
+];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function render(){
+ const q=document.getElementById('q').value.trim().toLowerCase();
+ const field=document.getElementById('field').value;
+ const kind=document.getElementById('kind').value;
+ const filtered=books.filter(b=>{
+  if(kind!=='all'&&b.kind!==kind)return false;
+  const hay=field==='title'?b.title:field==='author'?b.author:field==='subject'?b.subject:[b.title,b.author,b.subject,b.publisher,b.isbn].join(' ');
+  return !q||hay.toLowerCase().includes(q);
+ });
+ document.getElementById('status').textContent=`${filtered.length} record${filtered.length===1?'':'s'} found`;
+ document.getElementById('results').innerHTML=filtered.map(b=>`<article class="record">
+ <h3>${esc(b.title)}</h3><p><strong>Author/editor:</strong> ${esc(b.author)}</p>
+ <p><strong>Publication:</strong> ${esc(b.year)} · ${esc(b.publisher)}</p>
+ <p><strong>Subject:</strong> ${esc(b.subject)}</p><p><strong>ISBN:</strong> ${esc(b.isbn)}</p>
+ <p><strong>Suggested call number:</strong> ${esc(b.call)}</p>
+ <p><strong>Physical availability:</strong> ${esc(b.availability)}</p>
+ <p class="small">${esc(b.note)}</p><span class="tag">${b.kind==='LIS'?'Library & Information Science':'General study'}</span><span class="tag">Online access link</span>
+ <br><a class="read" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">Read online / access page ↗</a>
+ </article>`).join('');
+}
+document.getElementById('searchBtn').addEventListener('click',render);
+document.getElementById('resetBtn').addEventListener('click',()=>{document.getElementById('q').value='';document.getElementById('field').value='all';document.getElementById('kind').value='all';render();});
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')render();});
+document.getElementById('field').addEventListener('change',render);
+document.getElementById('kind').addEventListener('change',render);
+render();
+</script>
+</body>
+</html>
