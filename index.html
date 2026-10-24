@@ -3,390 +3,281 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KSTVET Online Library OPAC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KSTVET Library and Information Science OPAC</title>
 <style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f2f5f9;
-  color: #202938;
-}
-header {
-  background: #12345a;
-  color: white;
-  padding: 28px 18px;
-  text-align: center;
-}
-header h1 { margin: 0 0 10px; }
-header p { margin: 6px 0; }
-nav {
-  background: #0c2440;
-  padding: 12px;
-  text-align: center;
-}
-nav a {
-  color: white;
-  text-decoration: none;
-  margin: 0 12px;
-}
-main {
-  max-width: 1100px;
-  margin: auto;
-  padding: 22px 15px;
-}
-.intro {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-.search-area {
-  display: flex;
-  gap: 10px;
-  margin: 18px 0;
-}
-input, select {
-  padding: 13px;
-  border: 1px solid #b9c5d3;
-  border-radius: 7px;
-  font-size: 16px;
-}
-input { flex: 1; min-width: 0; }
-select { max-width: 200px; }
-#count { margin: 15px 0; color: #46556a; }
-#books {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
-  gap: 16px;
-}
-.book {
-  background: white;
-  padding: 18px;
-  border-radius: 10px;
-  border: 1px solid #dce3ec;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-}
-.book h3 { margin: 0; color: #12345a; }
-.author { color: #43536a; font-size: 14px; }
-.subject {
-  background: #e6eef9;
-  color: #12345a;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-size: 12px;
-  width: fit-content;
-}
-.book p { line-height: 1.5; font-size: 14px; }
-.book a {
-  display: inline-block;
-  margin-top: auto;
-  background: #176b48;
-  color: white;
-  text-decoration: none;
-  text-align: center;
-  padding: 11px;
-  border-radius: 6px;
-}
-.book a:hover { background: #105238; }
-.empty {
-  background: white;
-  padding: 25px;
-  border-radius: 8px;
-}
-footer {
-  background: #12345a;
-  color: white;
-  padding: 22px;
-  text-align: center;
-  margin-top: 30px;
-}
-@media (max-width: 600px) {
-  .search-area { flex-direction: column; }
-  select { max-width: none; }
-  nav a { display: inline-block; margin: 6px; }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f2f5f9;color:#243247}
+header{background:#12345a;color:white;text-align:center;padding:28px 16px}
+nav{background:#0b2440;padding:14px;text-align:center}
+nav a{color:white;margin:10px;text-decoration:none}
+main{max-width:1100px;margin:auto;padding:20px}
+input,select{padding:13px;border:1px solid #bbc7d5;border-radius:7px;font-size:16px}
+input{flex:1;min-width:0}
+.search{display:flex;gap:10px;margin:20px 0}
+#books{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.book{background:white;padding:18px;border:1px solid #dce3ec;border-radius:10px;display:flex;flex-direction:column;gap:10px}
+.book h3{color:#12345a;margin:0}
+.tag{font-size:12px;background:#e5edf9;padding:6px;border-radius:5px;width:fit-content}
+.book p{line-height:1.5;font-size:14px}
+.book a{background:#176b48;color:white;padding:11px;text-align:center;text-decoration:none;border-radius:6px;margin-top:auto}
+footer{background:#12345a;color:white;text-align:center;padding:20px;margin-top:30px}
+@media(max-width:600px){.search{flex-direction:column}}
 </style>
 </head>
 <body>
-
 <header>
-  <h1>KSTVET Online Library</h1>
-  <p>Online Public Access Catalogue (OPAC)</p>
-  <p>Discover books, explore subjects and access online reading resources.</p>
+<h1>KSTVET Online Library</h1>
+<p>Online Public Access Catalogue (OPAC)</p>
+<p>Library and Information Science Collection</p>
 </header>
-
 <nav>
-  <a href="#home">Home</a>
-  <a href="#catalogue">Book Catalogue</a>
-  <a href="#about">About</a>
+<a href="#home">Home</a>
+<a href="#catalogue">Catalogue</a>
+<a href="#about">About</a>
 </nav>
+<main id="home">
+<h2>Welcome to the KSTVET OPAC</h2>
+<p>Find learning resources on cataloguing, classification,
+indexing, records management, archives and information retrieval.</p>
 
-<main>
-  <section class="intro" id="home">
-    <h2>Welcome to the KSTVET OPAC</h2>
-    <p>
-      Search the catalogue by book title, author or subject.
-      Select a book's reading link to find its online resource.
-    </p>
-    <p><strong>Collection:</strong> Social sciences, education,
-    economics, psychology, politics and related subjects.</p>
-  </section>
+<section id="catalogue">
+<h2>Search the Catalogue</h2>
+<div class="search">
+<input id="q" type="search" placeholder="Search title, author or subject">
+<select id="filter">
+<option value="">All subjects</option>
+</select>
+</div>
+<p id="count" aria-live="polite"></p>
+<div id="books"></div>
+</section>
 
-  <section id="catalogue">
-    <h2>Search the Book Catalogue</h2>
-    <div class="search-area">
-      <input id="search" type="search"
-        placeholder="Search title, author or subject..."
-        aria-label="Search books">
-      <select id="subject" aria-label="Filter by subject">
-        <option value="">All subjects</option>
-      </select>
-    </div>
-    <p id="count" aria-live="polite"></p>
-    <div id="books"></div>
-  </section>
-
-  <section class="intro" id="about" style="margin-top:25px">
-    <h2>About This Catalogue</h2>
-    <p>
-      This demonstration OPAC helps users discover bibliographic
-      information and online reading resources. It is a sample
-      catalogue, not the official catalogue of KSTVET Library.
-    </p>
-    <p>
-      Online resources are hosted by external providers. Availability,
-      access conditions and copyright terms depend on each provider.
-    </p>
-  </section>
+<section id="about">
+<h2>About this catalogue</h2>
+<p>This is a demonstration student OPAC. Online resources are
+provided by external organisations. Some links open full texts;
+others open resource directories or searches. Access may depend
+on the provider. This is not the official KSTVET library catalogue.</p>
+</section>
 </main>
-
-<footer>
-  <p>KSTVET Online Library OPAC</p>
-  <p>Learning, discovery and access to information.</p>
-</footer>
+<footer>KSTVET Online Library | Learning and Information Access</footer>
 
 <script>
-const books = [
-  {
-    title: "Introduction to Sociology 3e",
-    author: "OpenStax",
-    subject: "Sociology",
-    description: "An introduction to society, culture, groups and social institutions.",
-    url: "https://openstax.org/details/books/introduction-sociology-3e"
-  },
-  {
-    title: "Psychology 2e",
-    author: "OpenStax",
-    subject: "Psychology",
-    description: "An overview of human behaviour, thinking and mental processes.",
-    url: "https://openstax.org/details/books/psychology-2e"
-  },
-  {
-    title: "American Government 3e",
-    author: "OpenStax",
-    subject: "Political Science",
-    description: "An introduction to political institutions, government and citizenship.",
-    url: "https://openstax.org/details/books/american-government-3e"
-  },
-  {
-    title: "Principles of Economics 3e",
-    author: "OpenStax",
-    subject: "Economics",
-    description: "An introduction to economic choices, markets and public policy.",
-    url: "https://openstax.org/details/books/principles-economics-3e"
-  },
-  {
-    title: "Introduction to Business",
-    author: "OpenStax",
-    subject: "Business",
-    description: "Explore business organisations, management and entrepreneurship.",
-    url: "https://openstax.org/subjects/business"
-  },
-  {
-    title: "Principles of Management",
-    author: "OpenStax",
-    subject: "Management",
-    description: "Explore management principles and organisational decision-making.",
-    url: "https://openstax.org/subjects/business"
-  },
-  {
-    title: "World History, Volume 1",
-    author: "OpenStax",
-    subject: "History",
-    description: "Explore early human societies and the development of civilisations.",
-    url: "https://openstax.org/subjects/social-sciences"
-  },
-  {
-    title: "World History, Volume 2",
-    author: "OpenStax",
-    subject: "History",
-    description: "Explore historical developments across regions and societies.",
-    url: "https://openstax.org/subjects/social-sciences"
-  },
-  {
-    title: "The Republic",
-    author: "Plato",
-    subject: "Philosophy",
-    description: "A classic philosophical work on justice, society and government.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Plato+Republic"
-  },
-  {
-    title: "The Prince",
-    author: "Niccolò Machiavelli",
-    subject: "Political Science",
-    description: "A classic work discussing political power and leadership.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Machiavelli+Prince"
-  },
-  {
-    title: "The Wealth of Nations",
-    author: "Adam Smith",
-    subject: "Economics",
-    description: "A foundational work on markets, labour and economic activity.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Wealth+of+Nations"
-  },
-  {
-    title: "The Communist Manifesto",
-    author: "Karl Marx and Friedrich Engels",
-    subject: "Political Science",
-    description: "A historical text on class, political movements and society.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Communist+Manifesto"
-  },
-  {
-    title: "On Liberty",
-    author: "John Stuart Mill",
-    subject: "Philosophy",
-    description: "A classic discussion of individual freedom and society.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=John+Stuart+Mill+On+Liberty"
-  },
-  {
-    title: "Democracy and Education",
-    author: "John Dewey",
-    subject: "Education",
-    description: "Examines the relationship between education and democratic life.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Democracy+and+Education"
-  },
-  {
-    title: "The Souls of Black Folk",
-    author: "W. E. B. Du Bois",
-    subject: "Sociology",
-    description: "Essays on race, identity and social life.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Souls+of+Black+Folk"
-  },
-  {
-    title: "The Federalist Papers",
-    author: "Alexander Hamilton, James Madison and John Jay",
-    subject: "Political Science",
-    description: "Essays on constitutional government and political institutions.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Federalist+Papers"
-  },
-  {
-    title: "The Art of War",
-    author: "Sun Tzu",
-    subject: "Leadership",
-    description: "A classic text on strategy, planning and leadership.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Sun+Tzu+Art+of+War"
-  },
-  {
-    title: "Utilitarianism",
-    author: "John Stuart Mill",
-    subject: "Philosophy",
-    description: "A philosophical work on ethics, happiness and moral choices.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=John+Stuart+Mill+Utilitarianism"
-  },
-  {
-    title: "The Elements of Sociology",
-    author: "Franklin Henry Giddings",
-    subject: "Sociology",
-    description: "A historical introduction to sociological ideas and social organisation.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Elements+of+Sociology"
-  },
-  {
-    title: "An Introduction to the Principles of Morals and Legislation",
-    author: "Jeremy Bentham",
-    subject: "Philosophy",
-    description: "A classic work on ethics, laws and principles of public policy.",
-    url: "https://www.gutenberg.org/ebooks/search/?query=Principles+of+Morals+and+Legislation"
-  }
+const resources = [
+{
+title:"The Information Literacy User's Guide",
+author:"Deborah Bernnard and colleagues",
+subject:"Information Literacy",
+description:"Open textbook on finding, evaluating and using information.",
+url:"https://library.csi.cuny.edu/infolit/oer-textbooks",
+access:"Open textbook listing"
+},
+{
+title:"Information Literacy Concepts",
+author:"David Hisle and Kathryn Webb",
+subject:"Information Literacy",
+description:"An open educational resource on research, information and ethical use.",
+url:"https://library.csi.cuny.edu/infolit/oer-textbooks",
+access:"Open textbook listing"
+},
+{
+title:"Choosing & Using Sources",
+author:"Ohio State University Libraries",
+subject:"Information Retrieval",
+description:"Guide to academic research, source evaluation and searching.",
+url:"https://library.csi.cuny.edu/infolit/oer-textbooks",
+access:"Open textbook listing"
+},
+{
+title:"The Discipline of Organizing",
+author:"Robert J. Glushko, editor",
+subject:"Classification",
+description:"Open textbook about organising information, classification and retrieval.",
+url:"https://opentextbc.ca/oerdiscipline/chapter/library-and-information-science/",
+access:"Open resource directory"
+},
+{
+title:"Academic Integrity",
+author:"Ulrike Kestler",
+subject:"Information Literacy",
+description:"Learning resource on citation, plagiarism and ethical scholarship.",
+url:"https://opentextbc.ca/oerdiscipline/chapter/library-and-information-science/",
+access:"Open resource directory"
+},
+{
+title:"Introduction to Cataloging and Classification",
+author:"Arlene G. Taylor and Daniel N. Joudrey",
+subject:"Cataloguing",
+description:"Find library holdings and editions of this cataloguing textbook.",
+url:"https://search.worldcat.org/search?q=Introduction+to+Cataloging+and+Classification",
+access:"Find book"
+},
+{
+title:"The Organization of Information",
+author:"Arlene G. Taylor and Daniel N. Joudrey",
+subject:"Information Organization",
+description:"Textbook on metadata, information organisation and retrieval.",
+url:"https://search.worldcat.org/search?q=The+Organization+of+Information",
+access:"Find book"
+},
+{
+title:"MARC 21 for Everyone",
+author:"Deborah J. Byrne",
+subject:"Cataloguing",
+description:"Learn about the MARC format for bibliographic records.",
+url:"https://search.worldcat.org/search?q=MARC+21+for+Everyone",
+access:"Find book"
+},
+{
+title:"Dewey Decimal Classification",
+author:"OCLC",
+subject:"Classification",
+description:"Official information about the Dewey Decimal Classification system.",
+url:"https://www.oclc.org/en/dewey.html",
+access:"Classification resource"
+},
+{
+title:"Library and Information Science: A Guide to Online Resources",
+author:"Library of Congress",
+subject:"Library Science",
+description:"Free online library and information science resources.",
+url:"https://www.loc.gov/",
+access:"Browse resources"
+},
+{
+title:"Library and Information Science Open Resources",
+author:"FRELIP Editorial Team",
+subject:"Library Science",
+description:"Curated open resources for African librarians, archivists and students.",
+url:"https://guides.frelip.org/library-science",
+access:"Browse free resources"
+},
+{
+title:"Library and Information Science OER Directory",
+author:"Saskatchewan Polytechnic Pressbooks",
+subject:"Library Science",
+description:"Directory of open textbooks, courses and learning resources.",
+url:"https://www.saskoer.ca/oerdiscipline/chapter/library-and-information-science/",
+access:"Browse free resources"
+},
+{
+title:"MANTRA Research Data Management Training",
+author:"University of Edinburgh",
+subject:"Records Management",
+description:"Free online training on research data management.",
+url:"https://mantra.ed.ac.uk/",
+access:"Free online course"
+},
+{
+title:"Applying Library Values to Emerging Technology",
+author:"Peter Fernandez and Kelly Tilton, editors",
+subject:"Library Science",
+description:"Open access perspectives on library values and technology.",
+url:"https://www.saskoer.ca/oerdiscipline/chapter/library-and-information-science/",
+access:"Open resource directory"
+},
+{
+title:"Contemporary Issues in Collection Management",
+author:"Kelsey Cameron and colleagues",
+subject:"Collection Management",
+description:"Open resource on digital collections, selection and library management.",
+url:"https://www.saskoer.ca/oerdiscipline/chapter/library-and-information-science/",
+access:"Open resource directory"
+},
+{
+title:"Introduction to College Research",
+author:"Walter D. Butler, Aloha Sargent and Kelsey Smith",
+subject:"Research Methods",
+description:"Open textbook about conducting college-level research.",
+url:"https://library.csi.cuny.edu/infolit/oer-textbooks",
+access:"Open textbook listing"
+},
+{
+title:"Fundamentals of Library and Information Science",
+author:"Multiple authors and editions",
+subject:"Library Science",
+description:"Search for introductory textbooks covering library services and practice.",
+url:"https://search.worldcat.org/search?q=fundamentals+of+library+and+information+science",
+access:"Find book"
+},
+{
+title:"Indexing and Abstracting",
+author:"Various authors",
+subject:"Indexing",
+description:"Find books on indexing techniques, abstracts and information retrieval.",
+url:"https://search.worldcat.org/search?q=indexing+and+abstracting+library+science",
+access:"Find book"
+},
+{
+title:"Records Management",
+author:"Various authors",
+subject:"Records Management",
+description:"Find textbooks about records creation, classification, retention and disposal.",
+url:"https://search.worldcat.org/search?q=records+management+textbook",
+access:"Find book"
+},
+{
+title:"Archives and Records Management",
+author:"Various authors",
+subject:"Archives",
+description:"Find books on archival arrangement, preservation and records management.",
+url:"https://search.worldcat.org/search?q=archives+and+records+management",
+access:"Find book"
+}
 ];
 
-const searchInput = document.getElementById("search");
-const subjectSelect = document.getElementById("subject");
-const booksContainer = document.getElementById("books");
-const count = document.getElementById("count");
+const query=document.getElementById("q");
+const filter=document.getElementById("filter");
+const container=document.getElementById("books");
+const count=document.getElementById("count");
 
-[...new Set(books.map(book => book.subject))]
-  .sort()
-  .forEach(subject => {
-    const option = document.createElement("option");
-    option.value = subject;
-    option.textContent = subject;
-    subjectSelect.appendChild(option);
-  });
+[...new Set(resources.map(r=>r.subject))].sort().forEach(s=>{
+const option=document.createElement("option");
+option.value=s;
+option.textContent=s;
+filter.appendChild(option);
+});
 
-function renderBooks() {
-  const query = searchInput.value.trim().toLowerCase();
-  const selectedSubject = subjectSelect.value;
-
-  const filtered = books.filter(book => {
-    const searchable =
-      `${book.title} ${book.author} ${book.subject} ${book.description}`
-      .toLowerCase();
-    return searchable.includes(query) &&
-      (!selectedSubject || book.subject === selectedSubject);
-  });
-
-  count.textContent =
-    `Showing ${filtered.length} of ${books.length} catalogue records`;
-
-  booksContainer.replaceChildren();
-
-  if (filtered.length === 0) {
-    const message = document.createElement("p");
-    message.className = "empty";
-    message.textContent =
-      "No books found. Try another title, author or subject.";
-    booksContainer.appendChild(message);
-    return;
-  }
-
-  filtered.forEach(book => {
-    const card = document.createElement("article");
-    card.className = "book";
-
-    const title = document.createElement("h3");
-    title.textContent = book.title;
-
-    const author = document.createElement("div");
-    author.className = "author";
-    author.textContent = "Author / creator: " + book.author;
-
-    const subject = document.createElement("span");
-    subject.className = "subject";
-    subject.textContent = book.subject;
-
-    const description = document.createElement("p");
-    description.textContent = book.description;
-
-    const link = document.createElement("a");
-    link.href = book.url;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    link.textContent = "Open reading resource ↗";
-
-    card.append(title, author, subject, description, link);
-    booksContainer.appendChild(card);
-  });
+function display(){
+const q=query.value.trim().toLowerCase();
+const subject=filter.value;
+const results=resources.filter(r=>
+(r.title+" "+r.author+" "+r.subject+" "+r.description)
+.toLowerCase().includes(q)&&(!subject||r.subject===subject)
+);
+count.textContent="Showing "+results.length+" of "+resources.length+" records";
+container.replaceChildren();
+if(!results.length){
+container.textContent="No matching resources. Try another search.";
+return;
 }
-
-searchInput.addEventListener("input", renderBooks);
-subjectSelect.addEventListener("change", renderBooks);
-renderBooks();
+results.forEach(r=>{
+const card=document.createElement("article");
+card.className="book";
+const title=document.createElement("h3");
+title.textContent=r.title;
+const author=document.createElement("p");
+author.textContent="Author / creator: "+r.author;
+const tag=document.createElement("span");
+tag.className="tag";
+tag.textContent=r.subject;
+const description=document.createElement("p");
+description.textContent=r.description;
+const access=document.createElement("p");
+access.textContent="Access: "+r.access;
+const link=document.createElement("a");
+link.href=r.url;
+link.target="_blank";
+link.rel="noopener noreferrer";
+link.textContent="Open resource ↗";
+card.append(title,author,tag,description,access,link);
+container.appendChild(card);
+});
+}
+query.addEventListener("input",display);
+filter.addEventListener("change",display);
+display();
 </script>
-
 </body>
-  </html>
-
+</html>
